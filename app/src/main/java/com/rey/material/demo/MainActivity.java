@@ -2,7 +2,6 @@ package com.rey.material.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -17,12 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mmx.service.ISensorService;
 import com.rey.material.app.ToolbarManager;
 import com.rey.material.util.ThemeUtil;
 import com.rey.material.widget.SnackBar;
@@ -48,16 +45,8 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
 
     private Tab[] mTabItems = new Tab[]{Tab.HOME, Tab.STATISTICS};
 
-    private Tab[] mItems = new Tab[]{Tab.HOME, Tab.WALKTHROUGH, Tab.ABOUTUS, Tab.STATISTICS};
+    private Tab[] mItems = new Tab[]{Tab.HOME, Tab.STATISTICS};
 
-
-    private Button mBindServiceBtn;
-    private Button mUnbindServiceBtn;
-
-    private ISensorService mSensorService;
-    private Bundle mThreadArgs;
-    private Message mThreadMsg;
-    private TextView mTextView;
 
 
     @Override
@@ -167,10 +156,8 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
     }
 
     public enum Tab {
-        HOME("HOME"),
-        WALKTHROUGH("WALKTHROUGH"),
-        ABOUTUS("ABOUT US"),
-        STATISTICS("STATISTICS");
+        HOME("BACKUP"),
+        STATISTICS("RESTORE");
         private final String name;
 
         private Tab(String s) {
@@ -278,26 +265,10 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
                 ArrayList<Fragment> mActive = (ArrayList<Fragment>) sActiveField.get(fm);
                 if (mActive != null) {
                     for (Fragment fragment : mActive) {
-                        if (fragment instanceof ProgressFragment)
+                        if (fragment instanceof BackupFragment)
                             setFragment(Tab.HOME, fragment);
-/*    					else if(fragment instanceof ButtonFragment)
-                            setFragment(Tab.WALKTHROUGH, fragment);
-                        else if(fragment instanceof FabFragment)
-                            setFragment(Tab.ABOUTUS, fragment);
-                            */
-                        else if (fragment instanceof SwitchesFragment)
+                        else if (fragment instanceof RestoreFragment)
                             setFragment(Tab.STATISTICS, fragment);
-/*                        else if(fragment instanceof SliderFragment)
-                            setFragment(Tab.SLIDERS, fragment);
-                        else if(fragment instanceof SpinnersFragment)
-                            setFragment(Tab.SPINNERS, fragment);
-    					else if(fragment instanceof TextfieldFragment)
-    						setFragment(Tab.TEXTFIELDS, fragment);
-    					else if(fragment instanceof SnackbarFragment)
-    						setFragment(Tab.SNACKBARS, fragment);
-                        else if(fragment instanceof DialogsFragment)
-                            setFragment(Tab.DIALOGS, fragment);
-                            */
                     }
                 }
             } catch (Exception e) {
@@ -317,33 +288,11 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
             if (mFragments[position] == null) {
                 switch (mTabs[position]) {
                     case HOME:
-                        mFragments[position] = ProgressFragment.newInstance();
-                        break;
-                    case WALKTHROUGH:
-                        mFragments[position] = ProgressFragment.newInstance();
-                        break;
-                    case ABOUTUS:
-                        mFragments[position] = FabFragment.newInstance();
+                        mFragments[position] = BackupFragment.newInstance();
                         break;
                     case STATISTICS:
-                        mFragments[position] = SwitchesFragment.newInstance();
+                        mFragments[position] = RestoreFragment.newInstance();
                         break;
-/*                    case SLIDERS:
-                        mFragments[position] = SliderFragment.newInstance();
-                        break;
-                    case SPINNERS:
-                        mFragments[position] = SpinnersFragment.newInstance();
-                        break;
-					case TEXTFIELDS:
-						mFragments[position] = TextfieldFragment.newInstance();
-						break;
-					case SNACKBARS:
-						mFragments[position] = SnackbarFragment.newInstance();
-						break;
-                    case DIALOGS:
-                        mFragments[position] = DialogsFragment.newInstance();
-                        break;
-                    */
                 }
             }
 
