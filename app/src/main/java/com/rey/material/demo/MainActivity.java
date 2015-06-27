@@ -1,18 +1,8 @@
 package com.rey.material.demo;
 
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.IBinder;
-import android.os.Looper;
 import android.os.Message;
-import android.os.RemoteException;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -21,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +21,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mmx.service.ISensorService;
 import com.rey.material.app.ToolbarManager;
@@ -70,49 +58,6 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
     private Bundle mThreadArgs;
     private Message mThreadMsg;
     private TextView mTextView;
-
-    private final ServiceConnection mServiceConn = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.v("SERVICE CONNECTED", "SERVICE CONNECTED");
-            mSensorService = ISensorService.Stub.asInterface(service);
-            Bundle data = new Bundle();
-            data.putString("KEY_APP_ID", "");
-            data.putString("KEY_AUTH_KEY", "");
-            data.putString("KEY_DEVICE_ID", "");
-            data.putString("KEY_APP_VERSION", "");
-
-            try {
-                mSensorService.sendRequiredDataToService(data);
-            } catch (RemoteException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            Toast.makeText(getApplicationContext(), "Service Connected !!!", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            Log.v("SERVICE DISCONNECTED", "SERVICE DISCONNECTED");
-            mSensorService = null;
-            Toast.makeText(getApplicationContext(), "Service Disconnected !!!", Toast.LENGTH_SHORT).show();
-        }
-    };
-
-    private volatile Looper mServiceLooper;
-    private volatile ServiceHandler mServiceHandler;
-
-    private final class ServiceHandler extends Handler {
-        public ServiceHandler(Looper looper) {
-            super(looper);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-            Bundle args = (Bundle) msg.obj;
-        }
-    }
 
 
     @Override
@@ -178,64 +123,8 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
 
         mDrawerAdapter.setSelected(Tab.HOME);
         vp.setCurrentItem(0);
-        initilizingServiceComponent();
     }
 
-    private void initilizingServiceComponent() {
- /*       View v = getLayoutInflater().inflate(R.layout.b, null);
-        mBindServiceBtn = (Button) v.findViewById(R.id.btnBindService);
-        mBindServiceBtn.setOnClickListener(this);
-
-        mUnbindServiceBtn = (Button) v.findViewById(R.id.btnUnbindService);
-        mUnbindServiceBtn.setOnClickListener(this);
-        mUnbindServiceBtn.setEnabled(false);
-*/
-        HandlerThread hthr = new HandlerThread("StartedSensorServiceThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
-        hthr.start();
-        mServiceLooper = hthr.getLooper();
-        mServiceHandler = new ServiceHandler(mServiceLooper);
-        mThreadArgs = new Bundle();
-
-        IntentFilter filter = new IntentFilter("com.mmx.service");
-        SensorReceiver receiver = new SensorReceiver();
-        registerReceiver(receiver, filter);
-
-    }
-
-    private void appendText(String text) {
-        String currentText = mTextView.getText() + System.getProperty("line.separator") + text;
-        mTextView.setText(currentText);
-        final int scrollAmount = mTextView.getLayout().getLineTop(mTextView.getLineCount()) - mTextView.getHeight();
-        // if there is no need to scroll, scrollAmount will be <=0
-        if (scrollAmount > 0)
-            mTextView.scrollTo(0, scrollAmount);
-        else
-            mTextView.scrollTo(0, 0);
-    }
-
-    public class SensorReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-        }
-    }
-
-
-    public void onBind(View v) {
-
-        if (!bindService(new Intent(ISensorService.class.getName()), mServiceConn, Context.BIND_AUTO_CREATE)) {
-            Toast.makeText(getApplicationContext(), "Kindly Install the service", Toast.LENGTH_LONG).show();
-            return;
-        }
-//       mBindServiceBtn.setEnabled(false);
-        //      mUnbindServiceBtn.setEnabled(true);
-    }
-
-    public void onUnBind(View v) {
-        unbindService(mServiceConn);
-        //      mBindServiceBtn.setEnabled(true);
-        //     mUnbindServiceBtn.setEnabled(false);
-
-    }
 
     private void startWalkthroughActivity() {
         Intent intent = new Intent(this, WalkthroughActivity.class);
