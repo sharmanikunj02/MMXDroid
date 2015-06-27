@@ -30,5 +30,8 @@
     <string name="rd_month_fourth">on every fourth %s</string>
     <string name="rd_event">event</string>
     <string name="rd_events">events</string>
+    <string name="appwidget_text">MMX Widget</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

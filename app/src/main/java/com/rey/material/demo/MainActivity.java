@@ -19,6 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.rey.material.app.ToolbarManager;
 import com.rey.material.util.ThemeUtil;
@@ -310,4 +311,13 @@ public class MainActivity extends ActionBarActivity implements ToolbarManager.On
             return mFragments.length;
         }
     }
+
+    public void onBackupNow(View v){
+        Toast.makeText(this, "Start Backup", Toast.LENGTH_SHORT).show();
+    }
+    public void onRestoreNow(View v){
+        Toast.makeText(this,"Start Restore",Toast.LENGTH_SHORT).show();
+    }
+
+
 }

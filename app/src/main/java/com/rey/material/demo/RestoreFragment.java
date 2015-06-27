@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.rey.material.widget.RadioButton;
 
@@ -34,6 +35,7 @@ public class RestoreFragment extends Fragment {
     public void onPause() {
         super.onPause();
     }
+
 
     @Override
     public void onResume() {
